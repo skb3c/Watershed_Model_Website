@@ -1,6 +1,5 @@
 import { memo } from "react";
-import logo from '/Users/yuvateja/Desktop/Watershed/Frontend/src/assets/pictures/logo.png'; // Adjust the path as necessary
-
+import logo from '../../assets/pictures/logo.png'
 function Navbar() {
   return (
     <div className="border-b border-gray-300 w-full h-16 sm:h-20" style={{ backgroundColor: '#ffc107' }}>

@@ -5,10 +5,10 @@ import 'leaflet/dist/leaflet.css';
 import * as turf from '@turf/turf';
 import Plot from 'react-plotly.js';
 
-import watershedData from '/Users/yuvateja/Desktop/Watershed/Frontend/src/assets/data/Hydrology/watersheds_4086.json';
-import boundaryData from '/Users/yuvateja/Desktop/Watershed/Frontend/src/assets/data/Hydrology/Missouri_water_model_boundary.json';
-import inletData from '/Users/yuvateja/Desktop/Watershed/Frontend/src/assets/data/Hydrology/Missouri_water_model_inlet_of_rivers.json';
-import streamData from '/Users/yuvateja/Desktop/Watershed/Frontend/src/assets/data/Hydrology/stream_network_4086.json';
+import watershedData from '../../assets/data/Hydrology/watersheds_4086.json';
+import boundaryData from '../../assets/data/Hydrology/Missouri_water_model_boundary.json';
+import inletData from '../../assets/data/Hydrology/Missouri_water_model_inlet_of_rivers.json';
+import streamData from '../../assets/data/Hydrology/stream_network_4086.json';
 
 function MapContent() {
   const map = useMap();
@@ -65,6 +65,20 @@ function ToggleButton({ activeLayer, onChange }) {
   );
 }
 
+function convertToDMS(decimal, isLat = true) {
+  const absolute = Math.abs(decimal);
+  const degrees = Math.floor(absolute);
+  const minutesNotTruncated = (absolute - degrees) * 60;
+  const minutes = Math.floor(minutesNotTruncated);
+  const seconds = ((minutesNotTruncated - minutes) * 60).toFixed(2);
+
+  const direction = isLat
+    ? decimal >= 0 ? 'N' : 'S'
+    : decimal >= 0 ? 'E' : 'W';
+
+  return `${degrees}°${minutes}'${seconds}" ${direction}`;
+}
+
 function FeatureTable({ data }) {
   const polygonDisplay = {
     Lat: 'Latitude',
@@ -94,58 +108,63 @@ function FeatureTable({ data }) {
     </div>
   );
 
-  const displayData = data.type === 'watershed' 
-    ? Object.entries(polygonDisplay).reduce((acc, [key, label]) => {
-        if (data[key] !== undefined) {
-          acc[label] = data[key];
-        }
+  const displayData = data.type === 'watershed'
+  ? Object.entries(polygonDisplay).reduce((acc, [key, label]) => {
+      if (data[key] !== undefined) {
+        acc[label] = data[key];
+      }
+      return acc;
+    }, {})
+  : data.type === 'stream'
+  ? Object.entries(streamNetworkDisplay).reduce((acc, [key, label]) => {
+      if (key === 'Lat' && data.clickLat !== undefined) {
+        acc[label] = Number(data.clickLat);
+      } else if (key === 'Long_' && data.clickLng !== undefined) {
+        acc[label] = Number(data.clickLng);
+      } else if (data[key] !== undefined) {
+        acc[label] = data[key];
+      }
+      return acc;
+    }, {})
+  : Object.entries(data)
+      .filter(([key]) => key !== 'type')
+      .reduce((acc, [key, value]) => {
+        const formattedKey = key.replace(/_/g, ' ')
+          .replace(/\b\w/g, c => c.toUpperCase());
+        acc[formattedKey] = value;
         return acc;
-      }, {})
-    : data.type === 'stream'
-    ? Object.entries(streamNetworkDisplay).reduce((acc, [key, label]) => {
-        if (key === 'Lat' && data.clickLat !== undefined) {
-          acc[label] = Number(data.clickLat).toFixed(6);
-        } else if (key === 'Long_' && data.clickLng !== undefined) {
-          acc[label] = Number(data.clickLng).toFixed(6);
-        } else if (data[key] !== undefined) {
-          acc[label] = data[key];
-        }
-        return acc;
-      }, {})
-    : Object.entries(data)
-        .filter(([key]) => key !== 'type')
-        .reduce((acc, [key, value]) => {
-          const formattedKey = key.replace(/_/g, ' ')
-            .replace(/\b\w/g, c => c.toUpperCase());
-          acc[formattedKey] = value;
-          return acc;
-        }, {});
+      }, {});
 
-  return (
-    <div className="h-full">
-      <div className="bg-white shadow-md rounded-lg p-4">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-blue-100 sticky top-0 shadow-sm z-10">
-            <tr>
-              <th className="px-6 py-3.5 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Property</th>
-              <th className="px-6 py-3.5 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Value</th>
+return (
+  <div className="h-full">
+    <div className="bg-white shadow-md rounded-lg p-4">
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className="bg-blue-100 sticky top-0 shadow-sm z-10">
+          <tr>
+            <th className="px-6 py-3.5 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Property</th>
+            <th className="px-6 py-3.5 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Value</th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {Object.entries(displayData).map(([key, value], index) => (
+            <tr key={key} className={`hover:bg-blue-50 transition-colors duration-150 ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
+              <td className="px-6 py-4 text-sm font-medium text-gray-900">{key}</td>
+              <td className="px-6 py-4 text-sm text-gray-600">
+                {(() => {
+                  if (key === 'Latitude') return convertToDMS(value, true);
+                  if (key === 'Longitude') return convertToDMS(value, false);
+                  return typeof value === 'number' ? value.toLocaleString() : value;
+                })()}
+              </td>
             </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {Object.entries(displayData).map(([key, value], index) => (
-              <tr key={key} className={`hover:bg-blue-50 transition-colors duration-150 ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
-                <td className="px-6 py-4 text-sm font-medium text-gray-900">{key}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">
-                  {typeof value === 'number' ? value.toLocaleString() : value}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
-  );
+  </div>
+);
 }
+
 
 // Define formatDate function
 const formatDate = (date) => {
@@ -272,13 +291,12 @@ function Hydrology() {
     if (selectedFeature && startDate && endDate) {
       let formatted_startdate = formatDate(startDate);
       let formatted_enddate = formatDate(endDate);
-      const subbasinId = selectedFeature.Subbasin || selectedFeature.OBJECTID;
+      const subbasinId = selectedFeature.Subbasin;
       const fetchData = async () => {
         try {
-          const token = localStorage.getItem('token');
           const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'uid': '01', 'Authorization': `Bearer ${token}` },
+            headers: { 'Content-Type': 'application/json', 'uid': '01' },
             body: JSON.stringify({ basinId: subbasinId.toString(), startDate: formatted_startdate, endDate: formatted_enddate })
           };
           const response = await fetch("http://127.0.0.1:5000/api/stream_flow_visualization", requestOptions);
