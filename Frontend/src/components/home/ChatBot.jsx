@@ -31,17 +31,21 @@ function ChatBot() {
     setIsLoading(true);
 
     try {
-      // TODO: Replace with actual API call
-      const response = await fetch('/api/chat', {
+      // Call the backend API
+      const response = await fetch('http://localhost:5000/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           message: message,
-          context: messages // Send conversation history for context
+          context: messages.map(msg => msg.content) // Send conversation history for context
         }),
       });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
 
       const data = await response.json();
       
@@ -49,7 +53,7 @@ function ChatBot() {
       const botMessage = {
         type: 'bot',
         content: data.response,
-        sources: data.sources, // References to PDF documents
+        sources: data.sources || [], // References to documents
         timestamp: new Date().toISOString()
       };
       setMessages(prev => [...prev, botMessage]);
@@ -66,6 +70,7 @@ function ChatBot() {
     }
   };
 
+  // ... rest of your component remains the same ...
   const renderMessage = (message) => {
     switch (message.type) {
       case 'user':
@@ -119,7 +124,7 @@ function ChatBot() {
           <div className="bg-gradient-to-r from-sky-500 to-blue-600 p-4 flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <FaRobot className="h-5 w-5 text-white" />
-              <h3 className="text-white font-semibold"> Assistant</h3>
+              <h3 className="text-white font-semibold">Water Resources Assistant</h3>
             </div>
             <button
               onClick={() => setIsOpen(false)}
@@ -135,7 +140,16 @@ function ChatBot() {
               <div className="flex items-start space-x-2">
                 <div className="bg-sky-100 rounded-lg p-3">
                   <p className="text-sky-800">
-                    Hello! I'm your document assistant. I can help you find information from our water resources documents. 
+                    Hello! I'm your water resources assistant. I can help you find information about:
+                    <br />
+                    - Stream flow data
+                    <br />
+                    - Water quality reports
+                    <br />
+                    - Climate indices
+                    <br />
+                    - And more!
+                    <br /><br />
                     What would you like to know?
                   </p>
                 </div>
@@ -193,4 +207,4 @@ function ChatBot() {
   );
 }
 
-export default ChatBot; 
+export default ChatBot;
