@@ -5,13 +5,44 @@ import Plot from 'react-plotly.js';
 import boundaryData from '../../assets/data/Hydrology/Missouri_water_model_boundary.json';
 import streamData from '../../assets/data/Hydrology/stream_network_4086.json';
 
+// const MapContent = React.memo(function MapContent() {
+//   const map = useMap();
+//   useEffect(() => {
+//     if (map) map.setView([38.5, -92.5], 6);
+//   }, [map]);
+//   return null;
+// });
 const MapContent = React.memo(function MapContent() {
   const map = useMap();
+
   useEffect(() => {
-    if (map) map.setView([38.5, -92.5], 6);
+    if (map) {
+      map.setView([38.5, -92.5], 6);
+
+      const legend = L.control({ position: 'topright' });
+
+      legend.onAdd = function () {
+        const div = L.DomUtil.create('div', 'info legend bg-white p-3 rounded shadow text-sm text-gray-800 border border-gray-300');
+        div.innerHTML += `
+          <strong>Legend</strong><br/>
+          <div><span style="display:inline-block;width:12px;height:12px;background:blue;margin-right:6px;border-radius:50%;"></span>No Forecast Data</div>
+          <div><span style="display:inline-block;width:12px;height:12px;background:red;margin-right:6px;"></span>Has Forecast Data</div>
+        `;
+        return div;
+      };
+
+      legend.addTo(map);
+
+      // Clean up on unmount
+      return () => {
+        legend.remove();
+      };
+    }
   }, [map]);
+
   return null;
 });
+
 
 const GaugeDetails = React.memo(function GaugeDetails({ gauge, onGraphChange, onNoaaGraphChange, onCombinedGraphChange, scrollToGraph }) {
   const [gaugeDetails, setGaugeDetails] = useState(null);

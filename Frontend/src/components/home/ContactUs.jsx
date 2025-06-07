@@ -121,7 +121,7 @@ function ContactUs() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div className="p-4 rounded-lg bg-gradient-to-br from-sky-50 to-sky-100">
               <h4 className="font-semibold text-sky-900">Email Us</h4>
-              <p className="text-sky-700 mt-1">info@mowater.org</p>
+              <p className="text-sky-700 mt-1">hydrology@missouri.edu</p>
             </div>
             <div className="p-4 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100">
               <h4 className="font-semibold text-blue-900">Call Us</h4>

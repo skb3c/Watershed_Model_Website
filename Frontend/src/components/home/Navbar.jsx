@@ -18,10 +18,10 @@ function Navbar() {
         <div className="flex-1 text-center px-2 sm:px-4">
           <h1 className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-black">
             <span className="block md:hidden">
-              <span className="block text-xs sm:text-sm">Missouri River Basin</span>
-              <span className="block text-xs sm:text-sm">Water Resources</span>
+              <span className="block text-xs sm:text-sm">Hydrology Lab at </span>
+              <span className="block text-xs sm:text-sm">University of Missouri</span>
             </span>
-            <span className="hidden md:block">Missouri River Basin Water Resources</span>
+            <span className="hidden md:block">Hydrology Lab at University of Missouri</span>
           </h1>
         </div>
       </div>

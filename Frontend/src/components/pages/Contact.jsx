@@ -39,7 +39,7 @@ function Contact() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">Email</h3>
-                  <p className="text-gray-600">info@mowater.org</p>
+                  <p className="text-gray-600">hydrology@missouri.edu</p>
                 </div>
               </div>
             </div>

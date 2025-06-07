@@ -131,7 +131,9 @@ function WaterDemand() {
   const parameters = useMemo(() => [
     { name: "precipitation", label: "Precipitation" },
     { name: "vaporPressure", label: "Vapor Pressure" },
-    { name: "temperature", label: "Temperature" }
+    { name: "temperature", label: "Temperature" },
+    {name: "Crop Water Demand", label: "Crop Water Demand" },
+    {name: "potential Evapotranspiration", label: "Potential Evapotranspiration" },
   ], []);
 
   // Optimize GeoJSON fetch
@@ -343,13 +345,14 @@ function WaterDemand() {
           <div className="w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 flex items-center gap-2 sm:gap-3">
               <span className="text-blue-500">Water</span> Demand
+              <sup className="text-sm text-gray-700 font-medium align-super">(under development)</sup>
             </h1>
           </div>
         </div>
 
         <div className="px-3 sm:px-4 py-3 sm:py-4 bg-gray-50 w-full">
           <p className="text-sm sm:text-base text-gray-700 mb-2">
-          Temperature, vapor pressure, and precipitation are interconnected factors that determine the water needs of agricultural systems. Understanding and managing these factors are crucial for optimizing water use in agriculture, enhancing crop yields, and ensuring water sustainability. Select a land area of interest, and a date range, to see trends in precipitation, vapor pressure, and/or temperature in our interactive graphs.
+          Temperature, vapor pressure, and precipitation are interconnected factors that determine the water needs of agricultural systems. Understanding and managing these factors are crucial for optimizing water use in agriculture, enhancing crop yields, and ensuring water sustainability. Select a land area of interest, and a date range, to see trends in precipitation, vapor pressure, and/or temperature in our interactive graphs. <span className="font-medium text-gray-800">More Information Coming Soon.</span>
           </p>
         </div>
 
@@ -515,11 +518,6 @@ function WaterDemand() {
 
         {graphData && graphData.map((data, index) => (
           <div key={index} className="w-full bg-white shadow-md rounded-lg mt-2 p-3 sm:p-4 min-h-[400px] sm:min-h-[500px]">
-            <h3 className="text-lg sm:text-xl font-bold text-center mb-3 sm:mb-4 text-black">
-              {data.type === 'precipitation' ? 'Precipitation' : 
-               data.type === 'vaporPressure' ? 'Vapor Pressure' : 
-               'Temperature'} at Location
-            </h3>
             <Plot
               data={JSON.parse(data.image).data}
               layout={JSON.parse(data.image).layout}
