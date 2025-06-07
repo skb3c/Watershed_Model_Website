@@ -184,8 +184,9 @@ function Hydrology() {
   const [selectedLayerId, setSelectedLayerId] = useState(null);
   const [selectedLayerType, setSelectedLayerType] = useState(null);
   const [activeLayer, setActiveLayer] = useState('watershed');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState("2000-01-01");
+const [endDate, setEndDate] = useState("2019-12-31");
+
   const [graphData, setGraphData] = useState(null);
 
   useEffect(() => {
@@ -319,20 +320,23 @@ function Hydrology() {
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-gray-50 to-white flex flex-col items-center justify-start py-6 px-4">
       <div className="w-full max-w-10xl border border-gray-200 rounded-2xl shadow-md overflow-hidden bg-white flex flex-col">
-        <div className="bg-white shadow-sm border-b border-gray-200/80 backdrop-blur-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-              <span className="text-blue-500">MO</span> Hydrology
-            </h1>
-          </div>
-        </div>
+      <div className="bg-white shadow-sm border-b border-gray-200/80 backdrop-blur-sm">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <h1 className="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-3">
+      <span className="text-blue-500">MO</span> Hydrology
+      <sup className="text-sm text-gray-700 font-medium align-super">(under development)</sup>
+
+    </h1>
+  </div>
+</div>
 
         <div className="px-4 py-4 bg-gray-50">
-        <p className="text-gray-700 mb-2">
-          The Missouri River Basin Model provides historical and projected streamflow forecasts from 2000 to 2019 (note: this will include forecasts in the future with an updated date range). The hydrological model was developed using the Soil and Water Assessment Toolkit (SWAT). This product is updated daily. 
-          <a href="link_to_publication" className="text-blue-500 underline"> Read here for more information on our model development</a>. 
-          Select a location and a date range to view the interactive hydrograph information.
-        </p>
+      <p className="text-gray-700 mb-2">
+  The Missouri River Basin Model provides historical and projected streamflow forecasts from 2000 to 2019 (note: this will include forecasts in the future with an updated date range). The hydrological model was developed using the Soil and Water Assessment Toolkit (SWAT). This product is updated daily. 
+  <a href="link_to_publication" className="text-blue-500 underline"> Read here for more information on our model development</a>. 
+  Select a location and a date range to view the interactive hydrograph information. <span className="font-medium text-gray-800">We are currently awaiting official publication.</span>
+</p>
+
       </div>
 
         <div className="flex-1 flex flex-col relative">
@@ -379,7 +383,7 @@ function Hydrology() {
               <div className="flex-1">
                 <div className="p-4">
                   <label className="block text-sm font-medium text-gray-700 mb-2">Select Start and End Dates:</label>
-                  <div className="flex items-center space-x-2 mt-2">
+                  {/* <div className="flex items-center space-x-2 mt-2">
                     <input
                       type="date"
                       value={startDate}
@@ -393,7 +397,27 @@ function Hydrology() {
                       onChange={(e) => setEndDate(e.target.value)}
                       className="border border-gray-300 rounded-md p-2 w-full text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
-                  </div>
+                  </div> */}
+                  <div className="flex items-center space-x-2 mt-2">
+  <input
+    type="date"
+    value={startDate}
+    onChange={(e) => setStartDate(e.target.value)}
+    min="2000-01-01"
+    max="2019-12-31"
+    className="border border-gray-300 rounded-md p-2 w-full text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+  />
+  <span className="text-gray-500">→</span>
+  <input
+    type="date"
+    value={endDate}
+    onChange={(e) => setEndDate(e.target.value)}
+    min="2000-01-01"
+    max="2019-12-31"
+    className="border border-gray-300 rounded-md p-2 w-full text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+  />
+</div>
+
                   <div className="flex space-x-4 mt-4">
                     <button
                       onClick={handleButtonClick}
