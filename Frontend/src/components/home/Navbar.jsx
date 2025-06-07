@@ -6,11 +6,11 @@ function Navbar() {
       <div className="w-full h-full flex items-center justify-between px-4 sm:px-6 md:px-8">
       
         <div className="flex-shrink-0">
-          <img
+          {/* <img
             src={logo}
             className="h-8 w-auto sm:h-10"
             alt="Logo"
-          />
+          /> */}
         </div>
 
 

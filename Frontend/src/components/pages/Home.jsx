@@ -2,7 +2,7 @@ import React from 'react'
 import { memo } from 'react'
 import Slide_show from '../home/Slide_show'
 import ContactUs from '../home/ContactUs'
-import { FaWater, FaChartLine, FaLeaf, FaMicroscope } from 'react-icons/fa'
+import { FaWater, FaChartLine, FaLeaf, FaMicroscope,FaRobot, FaGraduationCap } from 'react-icons/fa'
 
 function Home() {
   return (
@@ -17,14 +17,14 @@ function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-sky-900 sm:text-5xl mb-4 tracking-tight">
-              Our Services
+              Our Resources
             </h2>
             <p className="text-lg text-sky-700 max-w-3xl mx-auto">
               Comprehensive water resource management and research services for Missouri's future
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Feature 1 */}
             <div className="bg-gradient-to-br from-sky-50 to-sky-100 rounded-xl p-8 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
               <div className="inline-block p-4 bg-sky-200 rounded-full mb-6 ring-2 ring-sky-300 ring-opacity-50">
@@ -60,6 +60,25 @@ function Home() {
               <h3 className="text-xl font-semibold text-blue-900 mb-3">Research & Innovation</h3>
               <p className="text-blue-700">Cutting-edge research in water resources and environmental science</p>
             </div>
+
+            {/* Feature 5 */}
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-8 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+              <div className="inline-block p-4 bg-purple-200 rounded-full mb-6 ring-2 ring-purple-300 ring-opacity-50">
+                <FaRobot className="h-8 w-8 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-purple-900 mb-3">ChatBot Functionality</h3>
+              <p className="text-purple-700">Interactive chatbot trained on agricultural resources to answer your questions</p>
+            </div>
+
+            {/* Feature 6 */}
+            <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-8 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+              <div className="inline-block p-4 bg-amber-200 rounded-full mb-6 ring-2 ring-amber-300 ring-opacity-50">
+                <FaGraduationCap className="h-8 w-8 text-amber-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-amber-900 mb-3">Outreach and Education</h3>
+              <p className="text-amber-700">Details of courses, certifications, and educational programs available at MIZZOU</p>
+            </div>
+
           </div>
         </div>
       </section>
@@ -84,7 +103,7 @@ function Home() {
 
             {/* Latest Updates */}
             <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-sky-100">
-              <h3 className="text-3xl font-bold text-sky-900 mb-6">Latest Updates</h3>
+              <h3 className="text-3xl font-bold text-sky-900 mb-6">Upcoming Events</h3>
               <div className="space-y-6">
                 <div className="border-l-4 border-sky-500 pl-6 py-2 bg-sky-50 rounded-r-lg">
                   <h4 className="font-semibold text-sky-900 text-lg">New Research Publication</h4>

@@ -125,7 +125,7 @@ function ContactUs() {
             </div>
             <div className="p-4 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100">
               <h4 className="font-semibold text-blue-900">Call Us</h4>
-              <p className="text-blue-700 mt-1">+1 (573) 123-4567</p>
+              <p className="text-blue-700 mt-1">+1 (573) 882-73287</p>
             </div>
             <div className="p-4 rounded-lg bg-gradient-to-br from-cyan-50 to-cyan-100">
               <h4 className="font-semibold text-cyan-900">Visit Us</h4>
