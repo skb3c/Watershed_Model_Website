@@ -1,92 +1,165 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
-const slides = [
+const images = [
   {
-    id: 1,
-    image: '/images/slide1.jpg',
-    title: 'Missouri River Basin',
-    description: 'Monitoring and managing water resources in the heart of America'
+    src: 'https://storage.googleapis.com/miz_hydrology/Frontend_Data/Home_Tab/AGU-Fall-Meeting-2023.JPG',
+    alt: "AGU Fall Meeting 2023"
   },
   {
-    id: 2,
-    image: '/images/slide2.jpg',
-    title: 'Agricultural Water Management',
-    description: 'Supporting sustainable farming practices'
+    src: 'https://storage.googleapis.com/miz_hydrology/Frontend_Data/Home_Tab/Cocao-farm-Ghana-by-Aloysius.JPG',
+    alt: "Cocoa farm Ghana"
   },
   {
-    id: 3,
-    image: '/images/slide3.jpg',
-    title: 'Climate Research',
-    description: 'Understanding and adapting to climate change'
-  }
+    src: 'https://storage.googleapis.com/miz_hydrology/Frontend_Data/Home_Tab/Fall-2023-by-Aloysius.JPG',
+    alt: "Fall 2023"
+  },
+  { src: 'https://storage.googleapis.com/miz_hydrology/Frontend_Data/Home_Tab/Fall-mums-by-Aloysius.JPG', alt: "Fall mums" },
+  { src: 'https://storage.googleapis.com/miz_hydrology/Frontend_Data/Home_Tab/Fall-picnic-2023-by-Aloysius.JPG', alt: "Fall picnic 2023" },
+  { src: 'https://storage.googleapis.com/miz_hydrology/Frontend_Data/Home_Tab/Golden-Gate-Bridge-by-Aloysius.JPG', alt: "Golden Gate Bridge" },
+  { src: 'https://storage.googleapis.com/miz_hydrology/Frontend_Data/Home_Tab/Lake-Malawi_by-Maggie-Munthali.jpg', alt: "Lake Malawi" },
+  { src: 'https://storage.googleapis.com/miz_hydrology/Frontend_Data/Home_Tab/River-Ghana-by-Aloysius.JPG', alt: "River Ghana" },
+  { src: 'https://storage.googleapis.com/miz_hydrology/Frontend_Data/Home_Tab/Summer-MU-2023-01-by-Aloysius.JPG', alt: "Summer MU 2023" }
 ];
 
-function Slide_show() {
-  const [currentSlide, setCurrentSlide] = useState(0);
+function ImageSlider() {
+  const [current, setCurrent] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrent((prev) => (prev + 1) % images.length);
+    setTimeout(() => setIsTransitioning(false), 500);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrent((prev) => (prev - 1 + images.length) % images.length);
+    setTimeout(() => setIsTransitioning(false), 500);
   };
 
   useEffect(() => {
-    const timer = setInterval(nextSlide, 5000); // Auto-advance every 5 seconds
+    const timer = setInterval(() => {
+      nextSlide();
+    }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [current, isTransitioning]);
 
   return (
-    <div className="relative w-full h-[500px] overflow-hidden">
-      {/* Slides */}
-      <div className="relative w-full h-full">
-        {slides.map((slide, index) => (
-          <div
-            key={slide.id}
-            className={`absolute w-full h-full transition-opacity duration-500 ${
-              index === currentSlide ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            <div 
-              className="w-full h-full bg-cover bg-center"
-              style={{ backgroundImage: `url(${slide.image})` }}
-            >
-              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                <div className="text-center text-white px-4">
-                  <h2 className="text-4xl font-bold mb-4">{slide.title}</h2>
-                  <p className="text-xl">{slide.description}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Navigation Buttons */}
-      <button
+    <div style={{ 
+      position: 'relative', 
+      height: '600px', 
+      width: '100%', 
+      overflow: 'hidden',
+      borderRadius: '8px',
+      boxShadow: '0 4px 8px rgba(0,0,0,0.2)'
+    }}>
+      {images.map((img, idx) => (
+        <img
+          key={idx}
+          src={img.src}
+          alt={img.alt}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            opacity: idx === current ? 1 : 0,
+            transition: 'opacity 0.5s ease-in-out',
+            pointerEvents: 'none'
+          }}
+        />
+      ))}
+      
+      {/* Navigation buttons */}
+      <button 
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-75 p-2 rounded-full transition-all duration-300"
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '20px',
+          transform: 'translateY(-50%)',
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          color: 'white',
+          border: 'none',
+          borderRadius: '50%',
+          width: '40px',
+          height: '40px',
+          fontSize: '20px',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 10,
+          transition: 'background-color 0.3s',
+          outline: 'none'
+        }}
+        onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.8)'}
+        onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.5)'}
       >
-        <ChevronLeftIcon className="h-6 w-6 text-gray-800" />
+        &lt;
       </button>
-      <button
+      
+      <button 
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-75 p-2 rounded-full transition-all duration-300"
+        style={{
+          position: 'absolute',
+          top: '50%',
+          right: '20px',
+          transform: 'translateY(-50%)',
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          color: 'white',
+          border: 'none',
+          borderRadius: '50%',
+          width: '40px',
+          height: '40px',
+          fontSize: '20px',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 10,
+          transition: 'background-color 0.3s',
+          outline: 'none'
+        }}
+        onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.8)'}
+        onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.5)'}
       >
-        <ChevronRightIcon className="h-6 w-6 text-gray-800" />
+        &gt;
       </button>
-
-      {/* Dots */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {slides.map((_, index) => (
+      
+      {/* Dots indicator */}
+      <div style={{
+        position: 'absolute',
+        bottom: '20px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        display: 'flex',
+        gap: '10px',
+        zIndex: 10
+      }}>
+        {images.map((_, idx) => (
           <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentSlide ? 'bg-white' : 'bg-white bg-opacity-50'
-            }`}
+            key={idx}
+            onClick={() => {
+              if (isTransitioning) return;
+              setIsTransitioning(true);
+              setCurrent(idx);
+              setTimeout(() => setIsTransitioning(false), 500);
+            }}
+            style={{
+              width: '12px',
+              height: '18px',
+              borderRadius: '50%',
+              border: 'none',
+              backgroundColor: idx === current ? 'white' : 'rgba(255,255,255,0.5)',
+              cursor: 'pointer',
+              padding: 0,
+              transition: 'background-color 0.3s'
+            }}
           />
         ))}
       </div>
@@ -94,4 +167,4 @@ function Slide_show() {
   );
 }
 
-export default Slide_show; 
+export default ImageSlider;
