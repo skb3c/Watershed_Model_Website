@@ -7,6 +7,7 @@ import Plot from 'react-plotly.js';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ThreeDots } from 'react-loader-spinner';
+import '../../assets/css/action-buttons.css'
 
 // Memoize MapContent component
 const MapContent = React.memo(function MapContent() {
@@ -479,16 +480,16 @@ function WaterDemand() {
         </div>
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-3 pt-2">
+        <div className="action-buttons-container">
           <button
             onClick={handleButtonClick}
-            className="bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-all duration-200 text-sm font-medium"
+            className="action-button action-button-primary"
           >
             Send Data
           </button>
           <button
             onClick={resetSelection}
-            className="bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition-all duration-200 text-sm font-medium"
+            className="action-button action-button-danger"
           >
             Clear
           </button>

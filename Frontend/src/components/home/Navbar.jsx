@@ -1,5 +1,7 @@
 import { memo } from "react";
 import logo from '../../assets/pictures/logo.png'
+import '../../assets/css/heading.css'
+
 function Navbar() {
   return (
     <div className="border-b border-gray-300 w-full h-16 sm:h-20" style={{ backgroundColor: '#ffc107' }}>
@@ -15,15 +17,22 @@ function Navbar() {
 
 
         {/* Heading Section - Responsive & Centered */}
-        <div className="flex-1 text-center px-2 sm:px-4">
-          <h1 className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-black">
-            <span className="block md:hidden">
-              <span className="block text-xs sm:text-sm">Hydrology Lab at </span>
-              <span className="block text-xs sm:text-sm">University of Missouri</span>
-            </span>
-            <span className="hidden md:block">Hydrology Lab at University of Missouri</span>
-          </h1>
-        </div>
+         <div className="heading-container">
+  <h1 className="heading-title">
+    {/* Desktop (≥768px) */}
+    <span className="heading-desktop">
+      Hydrology Lab at University of Missouri
+    </span>
+
+    {/* Mobile (<768px) */}
+    <span className="heading-mobile">
+      <span>Hydrology Lab at</span>
+      <span>University of Missouri</span>
+    </span>
+  </h1>
+</div>  
+
+
       </div>
     </div>
   );

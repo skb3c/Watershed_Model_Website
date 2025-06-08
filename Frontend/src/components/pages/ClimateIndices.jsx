@@ -6,6 +6,7 @@ import markerIconPng from 'leaflet/dist/images/marker-icon.png';
 import { ThreeDots } from 'react-loader-spinner';
 import 'react-datepicker/dist/react-datepicker.css';
 import Plot from 'react-plotly.js';
+import '../../assets/css/action-buttons.css'
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import '../../../assets/css/Climate_Indicies_Content.css';
 
@@ -126,16 +127,16 @@ const CheckboxPanel = React.memo(function CheckboxPanel({ selectedCheckboxes, ha
         ))}
       </div>
 
-      <div className="flex flex-row space-x-3 mt-6">
+      <div className="action-buttons-container">
         <button 
           onClick={handleButtonClick} 
-          className="flex-1 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-150 shadow-sm hover:shadow-md"
+          className="action-button action-button-primary"
         >
           Send Data
         </button>
         <button 
           onClick={handleClearClick} 
-          className="flex-1 bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors duration-150 shadow-sm hover:shadow-md"
+          className="action-button action-button-danger"
         >
           Clear
         </button>

@@ -4,6 +4,8 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import * as turf from '@turf/turf';
 import Plot from 'react-plotly.js';
+import '../../assets/css/button-group.css'
+import '../../assets/css/action-buttons.css'
 
 import watershedData from '../../assets/data/Hydrology/watersheds_4086.json';
 import boundaryData from '../../assets/data/Hydrology/Missouri_water_model_boundary.json';
@@ -40,28 +42,24 @@ function useProcessedGeoJSON(data, type) {
 
 function ToggleButton({ activeLayer, onChange }) {
   return (
-    <div className="absolute top-4 right-4 z-[1000] inline-flex items-center p-1.5 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100/20">
-      <button
-        className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 ease-in-out ${
-          activeLayer === 'watershed'
-            ? 'bg-blue-500 text-white shadow-sm transform scale-102 ring-2 ring-blue-500/20'
-            : 'text-gray-600 hover:bg-gray-50/80 hover:text-blue-600'
-        }`}
-        onClick={() => onChange('watershed')}
-      >
-        Watersheds
-      </button>
-      <button
-        className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 ease-in-out ${
-          activeLayer === 'stream'
-            ? 'bg-blue-500 text-white shadow-sm transform scale-102 ring-2 ring-blue-500/20'
-            : 'text-gray-600 hover:bg-gray-50/80 hover:text-blue-600'
-        }`}
-        onClick={() => onChange('stream')}
-      >
-        Streamflow
-      </button>
-    </div>
+    <div className="button-group-container">
+  <button
+    className={`button-group-button ${
+      activeLayer === 'watershed' ? 'active-watershed' : ''
+    }`}
+    onClick={() => onChange('watershed')}
+  >
+    Watersheds
+  </button>
+  <button
+    className={`button-group-button ${
+      activeLayer === 'stream' ? 'active-stream' : ''
+    }`}
+    onClick={() => onChange('stream')}
+  >
+    Streamflow
+  </button>
+</div>
   );
 }
 
@@ -418,20 +416,21 @@ const [endDate, setEndDate] = useState("2019-12-31");
   />
 </div>
 
-                  <div className="flex space-x-4 mt-4">
-                    <button
-                      onClick={handleButtonClick}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                    >
-                      Send Data
-                    </button>
-                    <button
-                      onClick={resetSelection}
-                      className="bg-red-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                    >
-                      Clear
-                    </button>
-                  </div>
+                          <div className="action-buttons-container">
+            <button
+              onClick={handleButtonClick}
+              className="action-button action-button-primary"
+            >
+              Send Data
+            </button>
+            <button
+              onClick={resetSelection}
+              className="action-button action-button-danger"
+            >
+              Clear
+            </button>
+          </div>
+
                 </div>
                 <FeatureTable data={selectedFeature} />
               </div>

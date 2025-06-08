@@ -6,16 +6,16 @@ function OutreachEducation() {
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-sky-50 to-white">
       {/* Hero Section */}
-      <section className="w-full bg-gradient-to-r from-sky-600 to-blue-700 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold text-white sm:text-5xl mb-6 tracking-tight">
-            Outreach & Education
-          </h1>
-          <p className="text-xl text-sky-100 max-w-3xl mx-auto">
-            Advancing knowledge through courses, certificates, and research opportunities
-          </p>
-        </div>
-      </section>
+      <section className="w-full bg-gradient-to-r from-sky-500 to-blue-600 py-6">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h1 className="text-3xl font-bold text-white sm:text-4xl mb-2 tracking-tight">
+      Outreach & Education
+    </h1>
+    <p className="text-lg text-sky-100 max-w-3xl mx-auto">
+      Advancing knowledge through courses, certificates, and research opportunities
+    </p>
+  </div>
+</section>
 
       {/* Courses Section */}
       <section className="bg-gradient-to-b from-white to-sky-50 py-16">
@@ -25,14 +25,14 @@ function OutreachEducation() {
               <FaBook className="h-8 w-8 text-sky-600" />
             </div>
             <h2 className="text-3xl font-bold text-sky-900 sm:text-4xl mb-4">
-              Courses Offered at MIZZOU
+                Relevant courses offered at Mizzou
             </h2>
             <p className="text-lg text-sky-700 max-w-3xl mx-auto">
               Explore our specialized courses in environmental science and remote sensing
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Course 1 */}
             <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-sky-100">
               <h3 className="text-2xl font-semibold text-sky-900 mb-4">
@@ -72,6 +72,27 @@ function OutreachEducation() {
                 This course provides an understanding of the roles of natural processes and anthropogenic factors influencing the occurrence and movement of water. Students will learn the quantitative basis of hydrology, which will help them appreciate the scientific approach to understanding observed phenomena.
               </p>
             </div>
+
+             {/* Course 3 */}
+            <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-sky-100">
+              <h3 className="text-2xl font-semibold text-sky-900 mb-4">
+                <a 
+                  href='https://catalog.missouri.edu/collegeofengineering/additionalcertificatesminors/minor-engineering-sustainability/' 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-sky-600 hover:underline"
+                >
+                 Watershed Modeling Using GIS
+                </a>
+              </h3>
+              <p className="text-gray-600 font-medium mb-4">
+                (BIOL_EN 4350, CV_ENG 4720)
+              </p>
+              <p className="text-gray-700 leading-relaxed">
+                This course discusses about watershed evaluation using AVSWAT for hydrology, sediment yield, water quality; includes USLE, MUSLE, WEPP. Procedures for model calibration/sensitivity data analysis.
+              </p>
+            </div>
+
           </div>
         </div>
       </section>
@@ -155,7 +176,7 @@ function OutreachEducation() {
                   rel="noopener noreferrer"
                   className="hover:text-emerald-600 hover:underline"
                 >
-                  Certificate in Sustainability
+                  Certificate in Engineering Sustainability
                 </a>
               </h3>
               <p className="text-gray-600">
