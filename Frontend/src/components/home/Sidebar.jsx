@@ -22,7 +22,7 @@ export function Sidebar() {
         } transition-transform duration-300 ease-in-out w-72 z-[9998] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']`}
       >
         <Card className="h-full w-full p-6 shadow-none border-none bg-white/95 backdrop-blur-sm">
-          <Typography variant="h5" className="mb-6 ml-2 text-blue-900 font-bold text-xl">
+          <Typography variant="h5" className="mb-6 ml-4 text-blue-900 font-bold text-xl">
             Watershed Dashboard
           </Typography>
 
