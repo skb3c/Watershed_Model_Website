@@ -1,47 +1,52 @@
-i/* styles/heading.css */
+/* styles/heading.css */
 .heading-container {
-  flex: 1;
-  min-width: 120px;
-  margin: 0 auto;
-  padding: 0.25rem 0.75rem;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .heading-title {
   color: #111827; /* text-gray-900 */
-  font-weight: 500; /* font-medium */
-  line-height: 1.375; /* leading-snug */
+  font-weight: 750; /* font-medium */
+  line-height: 1.575; /* leading-snug */
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  
 }
 
-/* Mobile styles (default) */
+/* Responsive font sizing for heading */
+.heading-desktop {
+  font-size: 1.25rem; /* text-lg */
+}
+
 .heading-mobile {
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.25rem;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.heading-mobile span {
-  font-size: 0.875rem; /* text-sm */
-  line-height: 1.25rem;
-}
-
-/* Desktop styles */
+/* Show desktop on ≥768px */
 @media (min-width: 768px) {
   .heading-desktop {
-    display: inline;
+    display: block;
   }
-  
+
   .heading-mobile {
     display: none;
   }
 }
 
-/* Hide desktop version on mobile */
+/* Show mobile on <768px */
 @media (max-width: 767px) {
   .heading-desktop {
     display: none;
   }
-  
+
   .heading-mobile {
     display: flex;
   }

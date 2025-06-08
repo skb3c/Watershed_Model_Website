@@ -16,8 +16,8 @@ function Navbar() {
         </div>
 
 
-        {/* Heading Section - Responsive & Centered */}
-         <div className="heading-container">
+      {/* Heading Section - Responsive & Centered */}
+<div className="heading-container">
   <h1 className="heading-title">
     {/* Desktop (≥768px) */}
     <span className="heading-desktop">
@@ -30,7 +30,7 @@ function Navbar() {
       <span>University of Missouri</span>
     </span>
   </h1>
-</div>  
+</div>
 
 
       </div>
