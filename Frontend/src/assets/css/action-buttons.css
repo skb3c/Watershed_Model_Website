@@ -1,0 +1,61 @@
+/* styles/action-buttons.css */
+.action-buttons-container {
+  display: flex;
+  gap: 1rem; /* space-x-4 equivalent */
+  margin-top: 1rem; /* mt-4 */
+}
+
+.action-button {
+  padding: 0.5rem 1rem; /* px-4 py-2 */
+  border-radius: 0.375rem; /* rounded-md */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+  color: white;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.action-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px currentColor, 0 0 0 4px rgba(59, 130, 246, 0.5); /* focus:ring-2 focus:ring-offset-2 */
+}
+
+/* Blue button styles */
+.action-button-primary {
+  background-color: #3b82f6; /* bg-blue-500 */
+}
+
+.action-button-primary:hover {
+  background-color: #2563eb; /* hover:bg-blue-600 */
+}
+
+.action-button-primary:focus {
+  box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px rgba(59, 130, 246, 0.5); /* focus:ring-blue-500 */
+}
+
+/* Red button styles */
+.action-button-danger {
+  background-color: #ef4444; /* bg-red-500 */
+}
+
+.action-button-danger:hover {
+  background-color: #dc2626; /* hover:bg-red-600 */
+}
+
+.action-button-danger:focus {
+  box-shadow: 0 0 0 2px #ef4444, 0 0 0 4px rgba(239, 68, 68, 0.5); /* focus:ring-red-500 */
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .action-buttons-container {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .action-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+  }
+}
