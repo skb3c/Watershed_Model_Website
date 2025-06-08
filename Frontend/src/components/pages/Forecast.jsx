@@ -165,58 +165,68 @@ const GaugeDetails = React.memo(function GaugeDetails({ gauge, onGraphChange, on
             {gauge.name}
           </h2>
         </div>
+
         <div className="p-6">
-          <table className="min-w-full divide-y divide-gray-200">
-            <tbody className="bg-white divide-y divide-gray-200">
-              <tr className="hover:bg-blue-50 transition-colors duration-150">
-                <td className="px-6 py-4 text-sm font-medium text-gray-900"><strong>Lid:</strong></td>
-                <td className="px-6 py-4 text-sm text-gray-600">{gauge.lid}</td>
-              </tr>
-              <tr className="hover:bg-blue-50 transition-colors duration-150">
-                <td className="px-6 py-4 text-sm font-medium text-gray-900"><strong>rch Id:</strong></td>
-                <td className="px-6 py-4 text-sm text-gray-600">{gauge.rch_ID}</td>
-              </tr>
-              <tr className="hover:bg-blue-50 transition-colors duration-150">
-                <td className="px-6 py-4 text-sm font-medium text-gray-900"><strong>Sub BasinId:</strong></td>
-                <td className="px-6 py-4 text-sm text-gray-600">{gauge.Subbasin}</td>
-              </tr>
-              <tr className="hover:bg-blue-50 transition-colors duration-150">
-                <td className="px-6 py-4 text-sm font-medium text-gray-900"><strong>Reach ID:</strong></td>
-                <td className="px-6 py-4 text-sm text-gray-600">
-                  {gaugeDetails?.reachId ?? 'Fetching reach ID...'}
-                </td>
-              </tr>
-              <tr className="hover:bg-blue-50 transition-colors duration-150">
-                <td className="px-6 py-4 text-sm font-medium text-gray-900"><strong>USGS ID:</strong></td>
-                <td className="px-6 py-4 text-sm text-gray-600">
-                  {gaugeDetails?.usgsId ?? 'Fetching USGS ID...'}
-                </td>
-              </tr>
-              <tr className="hover:bg-blue-50 transition-colors duration-150">
-                <td className="px-6 py-4 text-sm font-medium text-gray-900"><strong>Current Water Level:</strong></td>
-                <td className="px-6 py-4 text-sm text-gray-600">{gauge.observed} {gauge.unit}</td>
-              </tr>
-              <tr className="hover:bg-blue-50 transition-colors duration-150">
-                <td className="px-6 py-4 text-sm font-medium text-gray-900"><strong>Flood Category:</strong></td>
-                <td className="px-6 py-4 text-sm text-gray-600">{gauge.floodCategory}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div className="mt-4 text-black">
-            <label htmlFor="apiOptions" className="font-semibold mr-2">Select Prediction:</label>
-            <select
-              id="apiOptions"
-              value={apiOption}
-              onChange={handleApiOptionChange}
-              className="border border-gray-300 rounded px-2 py-1"
-            >
-              <option value="">-- Select --</option>
-              <option value="Predicted Mu">Predicted Mu</option>
-              <option value="Predicted NOAA">Predicted NOAA</option>
-              <option value="Combined MU NOAA">Combined MU NOAA</option>
-            </select>
+            {/* First container for gauge details */}
+            <div className="bg-white rounded-lg shadow-sm mb-4">
+              <table className="min-w-full divide-y divide-gray-200">
+                <tbody className="bg-white divide-y divide-gray-200">
+                  <tr className="hover:bg-blue-50 transition-colors duration-150">
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900"><strong>Lid:</strong></td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{gauge.lid}</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors duration-150">
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900"><strong>rch Id:</strong></td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{gauge.rch_ID}</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors duration-150">
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900"><strong>Sub BasinId:</strong></td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{gauge.Subbasin}</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors duration-150">
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900"><strong>Reach ID:</strong></td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {gaugeDetails?.reachId ?? 'Fetching reach ID...'}
+                    </td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors duration-150">
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900"><strong>USGS ID:</strong></td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {gaugeDetails?.usgsId ?? 'Fetching USGS ID...'}
+                    </td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors duration-150">
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900"><strong>Current Water Level:</strong></td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{gauge.observed} {gauge.unit}</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors duration-150">
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900"><strong>Flood Category:</strong></td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{gauge.floodCategory}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* Second container for prediction selection */}
+            <div className="bg-white rounded-lg shadow-sm p-4">
+              <div className="text-black">
+                <label htmlFor="apiOptions" className="font-semibold mr-2">Select Prediction:</label>
+                <select
+                  id="apiOptions"
+                  value={apiOption}
+                  onChange={handleApiOptionChange}
+                  className="border border-gray-300 rounded px-2 py-1"
+                >
+                  <option value="">-- Select --</option>
+                  <option value="Predicted Mu">Predicted Mu</option>
+                  <option value="Predicted NOAA">Predicted NOAA</option>
+                  <option value="Combined MU NOAA">Combined MU NOAA</option>
+                </select>
+              </div>
+            </div>
           </div>
-        </div>
+
+
       </div>
     </div>
   );

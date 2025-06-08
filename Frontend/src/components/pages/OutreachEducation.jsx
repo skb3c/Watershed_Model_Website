@@ -6,16 +6,16 @@ function OutreachEducation() {
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-sky-50 to-white">
       {/* Hero Section */}
-      <section className="w-full bg-gradient-to-r from-sky-600 to-blue-700 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold text-white sm:text-5xl mb-6 tracking-tight">
-            Outreach & Education
-          </h1>
-          <p className="text-xl text-sky-100 max-w-3xl mx-auto">
-            Advancing knowledge through courses, certificates, and research opportunities
-          </p>
-        </div>
-      </section>
+      <section className="w-full bg-gradient-to-r from-sky-500 to-blue-600 py-6">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h1 className="text-3xl font-bold text-white sm:text-4xl mb-2 tracking-tight">
+      Outreach & Education
+    </h1>
+    <p className="text-lg text-sky-100 max-w-3xl mx-auto">
+      Advancing knowledge through courses, certificates, and research opportunities
+    </p>
+  </div>
+</section>
 
       {/* Courses Section */}
       <section className="bg-gradient-to-b from-white to-sky-50 py-16">

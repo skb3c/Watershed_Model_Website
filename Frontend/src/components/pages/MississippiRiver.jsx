@@ -4,7 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import markerIconPng from 'leaflet/dist/images/marker-icon.png';
 import Plot from 'react-plotly.js';
-
+import '../../assets/css/action-buttons.css'
 // Import all boundary files
 import arkansas from '../../assets/data/Mississippi/sub_region_boundaries/arkansas.json';
 import lowerMississippi from '../../assets/data/Mississippi/sub_region_boundaries/lower_mississippi.json';
@@ -383,20 +383,23 @@ function MississippiRiver() {
                       />
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      onClick={handleButtonClick}
-                      className="w-full bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
-                    >
-                      Send Data
-                    </button>
-                    <button
-                      onClick={resetSelection}
-                      className="w-full bg-red-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200"
-                    >
-                      Clear
-                    </button>
-                  </div>
+
+                              <div className="action-buttons-container">
+            <button
+              onClick={handleButtonClick}
+              className="action-button action-button-primary"
+            >
+              Send Data
+            </button>
+            <button
+              onClick={resetSelection}
+              className="action-button action-button-danger"
+            >
+              Clear
+            </button>
+          </div>
+
+
                 </div>
               )}
             </div>
