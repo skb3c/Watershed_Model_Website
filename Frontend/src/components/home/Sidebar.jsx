@@ -33,7 +33,7 @@ export function Sidebar() {
               { name: "MO Forecast", path: "/Forecast" },
               { name: "Mississippi Basin", path: "/MississippiRiver" },
               { name: "Agricultural Water", path: "/WaterDemand" },
-              { name: "Climate Indices", path: "/ClimateIndices" },
+              // { name: "Climate Indices", path: "/ClimateIndices" },
               { name: "UAV Imaging", path: "/UAVImaging" },
               { name: "Instrumentation", path: "/Instrumentation" },
               { name: "Water Quality", path: "/WaterQuality" },
