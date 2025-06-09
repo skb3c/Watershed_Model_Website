@@ -415,21 +415,23 @@ const [endDate, setEndDate] = useState("2019-12-31");
     className="border border-gray-300 rounded-md p-2 w-full text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
   />
 </div>
-
-                          <div className="action-buttons-container">
+      {/* //In future will enable right hidden and waiting for official Confirmation */}
+        {/* <div className="action-buttons-container">
             <button
               onClick={handleButtonClick}
               className="action-button action-button-primary"
+              
             >
               Send Data
             </button>
             <button
               onClick={resetSelection}
               className="action-button action-button-danger"
+              
             >
               Clear
             </button>
-          </div>
+          </div> */}
 
                 </div>
                 <FeatureTable data={selectedFeature} />

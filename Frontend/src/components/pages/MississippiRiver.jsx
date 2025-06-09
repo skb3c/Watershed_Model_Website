@@ -384,7 +384,7 @@ function MississippiRiver() {
                     </div>
                   </div>
 
-                              <div className="action-buttons-container">
+                              {/* <div className="action-buttons-container">
             <button
               onClick={handleButtonClick}
               className="action-button action-button-primary"
@@ -397,7 +397,7 @@ function MississippiRiver() {
             >
               Clear
             </button>
-          </div>
+          </div> */}
 
 
                 </div>
