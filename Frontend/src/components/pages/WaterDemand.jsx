@@ -131,10 +131,10 @@ function WaterDemand() {
   // Memoize the parameters array
   const parameters = useMemo(() => [
     { name: "precipitation", label: "Precipitation" },
-    { name: "vaporPressure", label: "Vapor Pressure" },
+    { name: "vaporPressure", label: "Vapor Pressure", disabled: true },
     { name: "temperature", label: "Temperature" },
-    {name: "Crop Water Demand", label: "Crop Water Demand" },
-    {name: "potential Evapotranspiration", label: "Potential Evapotranspiration" },
+    {name: "Crop Water Demand", label: "Crop Water Demand", disabled: true },
+    {name: "potential Evapotranspiration", label: "Potential Evapotranspiration", disabled: true },
   ], []);
 
   // Optimize GeoJSON fetch
@@ -438,7 +438,7 @@ function WaterDemand() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Select Parameters:</label>
           <div className="space-y-2">
-            {parameters.map(({ name, label }) => (
+            {parameters.map(({ name, label, disabled }) => (
               <label key={name} className="flex items-center space-x-2 text-gray-800">
                 <input
                   type="checkbox"
@@ -446,6 +446,7 @@ function WaterDemand() {
                   checked={selectedCheckboxes[name]}
                   onChange={handleCheckboxChange}
                   className="rounded text-blue-600 border-gray-300 focus:ring-blue-500"
+                  disabled={disabled}
                 />
                 <span>{label}</span>
               </label>

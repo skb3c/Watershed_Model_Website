@@ -1,38 +1,37 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { MapContainer, TileLayer, GeoJSON, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import markerIconPng from 'leaflet/dist/images/marker-icon.png';
 import Plot from 'react-plotly.js';
 import '../../assets/css/action-buttons.css'
-// Import all boundary files
-import arkansas from '../../assets/data/Mississippi/sub_region_boundaries/arkansas.json';
-import lowerMississippi from '../../assets/data/Mississippi/sub_region_boundaries/lower_mississippi.json';
-import lowerMissouri from '../../assets/data/Mississippi/sub_region_boundaries/lower_missouri.json';
-import ohio from '../../assets/data/Mississippi/sub_region_boundaries/ohio.json';
-import tennessee from '../../assets/data/Mississippi/sub_region_boundaries/tennessee.json';
-import upperMississippi from '../../assets/data/Mississippi/sub_region_boundaries/upper_mississippi.json';
-import upperMissouri from '../../assets/data/Mississippi/sub_region_boundaries/upper_missouri.json';
 
-// Reach files (lazy loaded)
-const reachFiles = {
-  arkansas: () => import('../../assets/data/Mississippi/individual/arkansas_reach_5285.json'),
-  lower_mississippi: () => import('../../assets/data/Mississippi/individual/lower_mississippi_reach_2675.json'),
-  lower_missouri: () => import('../../assets/data/Mississippi/individual/lower_missouri_reach_5835.json'),
-  ohio: () => import('../../assets/data/Mississippi/individual/ohio_reach_3139.json'),
-  tennessee: () => import('../../assets/data/Mississippi/individual/tennessee_reach_904.json'),
-  upper_mississippi: () => import('../../assets/data/Mississippi/individual/upper_mississippi_reach_6563.json'),
-  upper_missouri: () => import('../../assets/data/Mississippi/individual/upper_missouri_reach_6977.json')
+// GCS Base URL from environment variables
+const GCS_BASE_URL = import.meta.env.VITE_APP_GCS_BASE_URL;
+
+// Define the base paths for GCS data
+const GCS_BOUNDARY_PATH = 'Mississippi_Basin/sub_region_boundaries/';
+const GCS_REACH_PATH = 'Mississippi_Basin/';
+
+// Map region keys to their respective GCS filenames
+const regionBoundaryFilenames = {
+  arkansas: 'arkansas.json',
+  lower_mississippi: 'lower_mississippi.json',
+  lower_missouri: 'lower_missouri.json',
+  ohio: 'ohio.json',
+  tennessee: 'tennessee.json',
+  upper_mississippi: 'upper_mississippi.json',
+  upper_missouri: 'upper_missouri.json',
 };
 
-const boundaries = {
-  arkansas,
-  lower_mississippi: lowerMississippi,
-  lower_missouri: lowerMissouri,
-  ohio,
-  tennessee,
-  upper_mississippi: upperMississippi,
-  upper_missouri: upperMissouri
+const regionReachFilenames = {
+  arkansas: 'arkansas_reach_5285.json',
+  lower_mississippi: 'lower_mississippi_reach_2675.json',
+  lower_missouri: 'lower_missouri_reach_5835.json',
+  ohio: 'ohio_reach_3139.json',
+  tennessee: 'tennessee_reach_904.json',
+  upper_mississippi: 'upper_mississippi_reach_6563.json',
+  upper_missouri: 'upper_missouri_reach_6977.json',
 };
 
 const regionCenter_Coordinates = {
@@ -44,15 +43,6 @@ const regionCenter_Coordinates = {
   lower_missouri: [40.53269348488626, -98.68122161083134],
   upper_mississippi: [43.31057560763997, -91.68957909571034]
 };
-
-
-// function RegionMapContent() {
-//   const map = useMap();
-//   useEffect(() => {
-//     map.setView([38.5, -92.5], 6);
-//   }, [map]);
-//   return null;
-// }
 
 function convertToDMS(decimal, isLatitude) {
   const absolute = Math.abs(decimal);
@@ -134,22 +124,69 @@ function FeatureTable({ data }) {
 
 function MississippiRiver() {
   const [selectedRegion, setSelectedRegion] = useState(null);
-  const [reachData, setReachData] = useState(null);
+  const [boundaryData, setBoundaryData] = useState(null); // State for boundary GeoJSON for selected region
+  const [allBoundaries, setAllBoundaries] = useState({}); // State for all boundary GeoJSONs
+  const [reachData, setReachData] = useState(null);       // State for reach GeoJSON
   const [selectedFeature, setSelectedFeature] = useState(null);
   const [clickedLatLng, setClickedLatLng] = useState(null);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [graphData, setGraphData] = useState(null);
+  const [loading, setLoading] = useState(false); // State for loading
+  const [error, setError] = useState(null);     // State for errors
   const highlightedLayerRef = useRef(null);
   const mapRef = useRef(null);
 
   const minDate = new Date(2010, 0, 1);
   const maxDate = new Date(2019, 12, 1);
 
+  // Helper function to fetch data from GCS
+  const fetchData = useCallback(async (regionKey, type) => {
+    setLoading(true);
+    setError(null);
+    let url = '';
+    if (type === 'boundary') {
+      url = `${GCS_BASE_URL}/${GCS_BOUNDARY_PATH}${regionBoundaryFilenames[regionKey]}`;
+    } else if (type === 'reach') {
+      url = `${GCS_BASE_URL}/${GCS_REACH_PATH}${regionReachFilenames[regionKey]}`;
+    }
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setLoading(false);
+      return data;
+    } catch (e) {
+      console.error(`Failed to fetch ${type} data for ${regionKey}:`, e);
+      setError(`Failed to load ${type} data: ${e.message}`);
+      setLoading(false);
+      return null;
+    }
+  }, [GCS_BASE_URL]);
+
+  // Fetch all boundaries on component mount
+  useEffect(() => {
+    const loadAllBoundaries = async () => {
+      const boundariesMap = {};
+      for (const regionKey of Object.keys(regionBoundaryFilenames)) {
+        const data = await fetchData(regionKey, 'boundary');
+        if (data) {
+          boundariesMap[regionKey] = data;
+        }
+      }
+      setAllBoundaries(boundariesMap);
+    };
+    loadAllBoundaries();
+  }, [fetchData]);
+
   const handleCheckboxChange = async (regionKey) => {
     if (selectedRegion === regionKey) {
       setSelectedRegion(null);
-      setReachData(null);
+      // setBoundaryData(null); // Boundaries will always be shown
+      setReachData(null); // Clear reach data when deselected
       setSelectedFeature(null);
       setClickedLatLng(null);
       setStartDate('');
@@ -160,28 +197,26 @@ function MississippiRiver() {
     }
 
     setSelectedRegion(regionKey);
-    const bounds = L.geoJSON(boundaries[regionKey]).getBounds();
+    setSelectedFeature(null);
+    setClickedLatLng(null);
+    setStartDate('');
+    setEndDate('');
+    setGraphData(null);
 
-    try {
-      const data = await reachFiles[regionKey]();
-      setReachData(data.default);
-      setSelectedFeature(null);
-      setClickedLatLng(null);
-      setStartDate('');
-      setEndDate('');
-      setGraphData(null);
+    // Fetch only reach data for the selected region
+    // const boundaryGeoJSON = await fetchData(regionKey, 'boundary'); // Not needed as all boundaries are loaded
+    const reachGeoJSON = await fetchData(regionKey, 'reach');
 
-      // Center the map on the selected region with a slight delay to ensure map is ready
-      if (mapRef.current && regionCenter_Coordinates[regionKey]) {
-        const [lat, lng] = regionCenter_Coordinates[regionKey];
-        mapRef.current.setView([lat, lng], 7, {
-          animate: true,
-          duration: 1
-        });
-      }
-      
-    } catch (error) {
-      console.error('Failed to load reach data:', error);
+    // setBoundaryData(boundaryGeoJSON); // Not needed as all boundaries are loaded
+    setReachData(reachGeoJSON);
+
+    // Center the map on the selected region
+    if (mapRef.current && regionCenter_Coordinates[regionKey]) {
+      const [lat, lng] = regionCenter_Coordinates[regionKey];
+      mapRef.current.setView([lat, lng], 7, {
+        animate: true,
+        duration: 1
+      });
     }
   };
 
@@ -193,6 +228,7 @@ function MississippiRiver() {
           Lat: e.latlng.lat,
           Long_: e.latlng.lng
         };
+        console.log("Properties of clicked feature:", enrichedProperties);
         setSelectedFeature(enrichedProperties);
         setClickedLatLng(e.latlng);
 
@@ -239,7 +275,6 @@ function MississippiRiver() {
       const subbasinId = selectedFeature.Subbasin;
       const fetchData = async () => {
         try {
-          // const token = localStorage.getItem('token');
           const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'uid': '01' },
@@ -261,29 +296,37 @@ function MississippiRiver() {
             setGraphData(data);
           }
         } catch (error) {
-          console.error('There was a problem with the fetch operation:', error);
+          console.error('Error fetching graph data:', error);
         }
-      }
+      };
       fetchData();
     }
   };
 
   const resetSelection = () => {
+    setSelectedRegion(null);
+    setReachData(null);
     setSelectedFeature(null);
     setClickedLatLng(null);
     setStartDate('');
     setEndDate('');
     setGraphData(null);
-    if (highlightedLayerRef.current && highlightedLayerRef.current.setStyle) {
-      highlightedLayerRef.current.setStyle({
-        color: 'blue',
-        weight: 2,
-        opacity: 0.7,
-        dashArray: '3',
-        fillOpacity: 0.1
-      });
-    }
+    highlightedLayerRef.current = null;
   };
+
+  const boundaryStyle = useMemo(() => ({
+    color: 'rgba(0, 0, 255, 0.3)',
+    weight: 2,
+    opacity: 0.5,
+    fillColor: 'blue',
+    fillOpacity: 0.1
+  }), []);
+
+  const streamStyle = useMemo(() => ({
+    color: 'rgba(0, 0, 255, 0.5)',
+    weight: 3,
+    opacity: 0.7
+  }), []);
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-gray-50 to-white flex flex-col items-center justify-start py-6 px-4">
@@ -314,17 +357,21 @@ function MississippiRiver() {
                 zoomControl={false} 
                 whenCreated={(mapInstance) => { mapRef.current = mapInstance; }}
               >
-                {/* <RegionMapContent /> */}
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-                {Object.entries(boundaries).map(([key, data]) => (
-                  <GeoJSON key={key} data={data} style={{ color: '#444', weight: 2 }} />
+                {Object.values(allBoundaries).map((boundary, index) => (
+                  <GeoJSON 
+                    key={index} // Consider a more stable key if possible from boundary data
+                    data={boundary} 
+                    style={boundaryStyle} 
+                    // onEachFeature={onEachFeature} 
+                  />
                 ))}
 
                 {reachData && (
                   <GeoJSON 
                     data={reachData} 
-                    style={{ color: 'blue', weight: 2 }} 
+                    style={streamStyle} 
                     onEachFeature={onEachFeature} 
                   />
                 )}
@@ -332,7 +379,13 @@ function MississippiRiver() {
                 {clickedLatLng && (
                   <Marker 
                     position={clickedLatLng} 
-                    icon={L.icon({ iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41] })}
+                    icon={new L.Icon({
+                      iconUrl: markerIconPng,
+                      iconSize: [25, 41],
+                      iconAnchor: [12, 41],
+                      popupAnchor: [1, -34],
+                      shadowSize: [41, 41]
+                    })}
                   >
                     <Popup>Selected Stream</Popup>
                   </Marker>
@@ -347,7 +400,7 @@ function MississippiRiver() {
             </div>
             <div className="flex-1 p-4 space-y-6">
               <div className="grid grid-cols-1 gap-2">
-                {Object.keys(boundaries).map((region) => (
+                {Object.keys(regionCenter_Coordinates).map((region) => (
                   <div key={region} className="flex items-center p-2 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                     <input
                       type="checkbox"
@@ -384,22 +437,22 @@ function MississippiRiver() {
                     </div>
                   </div>
 
-                              {/* <div className="action-buttons-container">
-            <button
-              onClick={handleButtonClick}
-              className="action-button action-button-primary"
-            >
-              Send Data
-            </button>
-            <button
-              onClick={resetSelection}
-              className="action-button action-button-danger"
-            >
-              Clear
-            </button>
-          </div> */}
-
-
+                  <div className="action-buttons-container">
+                    <button
+                      onClick={handleButtonClick}
+                      className="action-button action-button-primary"
+                      disabled
+                    >
+                      Send Data
+                    </button>
+                    <button
+                      onClick={resetSelection}
+                      className="action-button action-button-danger"
+                      
+                    >
+                      Clear
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

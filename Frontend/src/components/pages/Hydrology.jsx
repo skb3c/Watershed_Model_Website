@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -6,11 +6,8 @@ import * as turf from '@turf/turf';
 import Plot from 'react-plotly.js';
 import '../../assets/css/button-group.css'
 import '../../assets/css/action-buttons.css'
-
-import watershedData from '../../assets/data/Hydrology/watersheds_4086.json';
-import boundaryData from '../../assets/data/Hydrology/Missouri_water_model_boundary.json';
-import inletData from '../../assets/data/Hydrology/Missouri_water_model_inlet_of_rivers.json';
-import streamData from '../../assets/data/Hydrology/stream_network_4086.json';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function MapContent() {
   const map = useMap();
@@ -183,9 +180,13 @@ function Hydrology() {
   const [selectedLayerType, setSelectedLayerType] = useState(null);
   const [activeLayer, setActiveLayer] = useState('watershed');
   const [startDate, setStartDate] = useState("2000-01-01");
-const [endDate, setEndDate] = useState("2019-12-31");
+  const [endDate, setEndDate] = useState("2019-12-31");
 
   const [graphData, setGraphData] = useState(null);
+  const [boundary, setBoundary] = useState(null);
+  const [inlet, setInlet] = useState(null);
+  const [watershed, setWatershed] = useState(null);
+  const [streamnetwork, setStreamnetwork] = useState(null);
 
   useEffect(() => {
     delete L.Icon.Default.prototype._getIconUrl;
@@ -196,10 +197,39 @@ const [endDate, setEndDate] = useState("2019-12-31");
     });
   }, []);
 
-  const processedWatersheds = useProcessedGeoJSON(watershedData, 'watershed');
-  const processedBoundary = useProcessedGeoJSON(boundaryData, 'boundary');
-  const processedInlets = useProcessedGeoJSON(inletData, 'inlet');
-  const processedStreams = useProcessedGeoJSON(streamData, 'stream');
+  useEffect(() => {
+    const baseUrl = import.meta.env.VITE_APP_GCS_BASE_URL;
+    console.log("link",baseUrl);
+    const fetchData = async () => {
+      try {
+        const boundaryResponse = await fetch(`${baseUrl}/Mo_Hydrology/Missouri_water_model_boundary.json`);
+        const boundaryData = await boundaryResponse.json();
+        setBoundary(boundaryData);
+
+        const inletResponse = await fetch(`${baseUrl}/Mo_Hydrology/Missouri_water_model_inlet_of_rivers.json`);
+        const inletData = await inletResponse.json();
+        setInlet(inletData);
+
+        const watershedResponse = await fetch(`${baseUrl}/Mo_Hydrology/watersheds_4086.json`);
+        const watershedData = await watershedResponse.json();
+        setWatershed(watershedData);
+
+        const streamnetworkResponse = await fetch(`${baseUrl}/Mo_Hydrology/stream_network_4086.json`);
+        const streamnetworkData = await streamnetworkResponse.json();
+        setStreamnetwork(streamnetworkData);
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const processedWatersheds = useProcessedGeoJSON(watershed, 'watershed');
+  const processedBoundary = useProcessedGeoJSON(boundary, 'boundary');
+  const processedInlets = useProcessedGeoJSON(inlet, 'inlet');
+  const processedStreams = useProcessedGeoJSON(streamnetwork, 'stream');
 
   const getStyle = (feature) => {
     const type = feature.properties?.type;
@@ -381,21 +411,6 @@ const [endDate, setEndDate] = useState("2019-12-31");
               <div className="flex-1">
                 <div className="p-4">
                   <label className="block text-sm font-medium text-gray-700 mb-2">Select Start and End Dates:</label>
-                  {/* <div className="flex items-center space-x-2 mt-2">
-                    <input
-                      type="date"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                      className="border border-gray-300 rounded-md p-2 w-full text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                    <span className="text-gray-500">→</span>
-                    <input
-                      type="date"
-                      value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
-                      className="border border-gray-300 rounded-md p-2 w-full text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div> */}
                   <div className="flex items-center space-x-2 mt-2">
   <input
     type="date"
@@ -415,23 +430,22 @@ const [endDate, setEndDate] = useState("2019-12-31");
     className="border border-gray-300 rounded-md p-2 w-full text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
   />
 </div>
-      {/* //In future will enable right hidden and waiting for official Confirmation */}
-        {/* <div className="action-buttons-container">
+      <div className="action-buttons-container">
             <button
               onClick={handleButtonClick}
               className="action-button action-button-primary"
-              
+              disabled
             >
               Send Data
             </button>
             <button
               onClick={resetSelection}
               className="action-button action-button-danger"
-              
+              disabled
             >
               Clear
             </button>
-          </div> */}
+          </div>
 
                 </div>
                 <FeatureTable data={selectedFeature} />
