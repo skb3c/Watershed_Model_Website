@@ -33,7 +33,7 @@ export function Sidebar() {
               { name: "MO Forecast", path: "/Forecast" },
               { name: "Mississippi Basin", path: "/MississippiRiver" },
               { name: "Agricultural Water", path: "/WaterDemand" },
-              // { name: "Climate Indices", path: "/ClimateIndices" },
+              { name: "Climate Indices", path: "/ClimateIndices", disabled: true },
               { name: "UAV Imaging", path: "/UAVImaging" },
               { name: "Instrumentation", path: "/Instrumentation" },
               { name: "Water Quality", path: "/WaterQuality" },
@@ -41,7 +41,7 @@ export function Sidebar() {
             ].map((item, index) => (
               <ListItem 
                 key={index} 
-                className="hover:bg-blue-50 rounded-lg transition-all duration-200"
+                className={`rounded-lg transition-all duration-200 ${item.disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-50'}`}
               >
                 <NavLink
                   to={item.path}
@@ -49,10 +49,18 @@ export function Sidebar() {
                     `w-full block px-4 py-2 rounded-lg transition-all duration-200 ${
                       isActive
                         ? "text-blue-600 font-semibold bg-blue-50/80"
-                        : "text-gray-700 hover:text-blue-600"
+                        : item.disabled
+                          ? "text-gray-400"
+                          : "text-gray-700 hover:text-blue-600"
                     }`
                   }
-                  onClick={() => setIsOpen(false)}
+                  onClick={(e) => {
+                    if (item.disabled) {
+                      e.preventDefault();
+                    } else {
+                      setIsOpen(false);
+                    }
+                  }}
                 >
                   {item.name}
                 </NavLink>

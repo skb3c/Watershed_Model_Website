@@ -1,17 +1,12 @@
-import React, { useRef, useMemo, useEffect, useState } from 'react';
+import React, { useRef, useMemo, useEffect, useState, useCallback } from 'react';
 import { MapContainer, TileLayer, GeoJSON, CircleMarker, Marker, Popup, Rectangle, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import Plot from 'react-plotly.js';
-import boundaryData from '../../assets/data/Hydrology/Missouri_water_model_boundary.json';
-import streamData from '../../assets/data/Hydrology/stream_network_4086.json';
+import * as turf from '@turf/turf';
+import 'react-datepicker/dist/react-datepicker.css';
+// import '../../assets/css/action-buttons.css';
 
-// const MapContent = React.memo(function MapContent() {
-//   const map = useMap();
-//   useEffect(() => {
-//     if (map) map.setView([38.5, -92.5], 6);
-//   }, [map]);
-//   return null;
-// });
+
 const MapContent = React.memo(function MapContent() {
   const map = useMap();
 
@@ -218,9 +213,9 @@ const GaugeDetails = React.memo(function GaugeDetails({ gauge, onGraphChange, on
                   className="border border-gray-300 rounded px-2 py-1"
                 >
                   <option value="">-- Select --</option>
-                  <option value="Predicted Mu">Predicted Mu</option>
+                  <option value="Predicted Mu" disabled>Predicted Mu</option>
                   <option value="Predicted NOAA">Predicted NOAA</option>
-                  <option value="Combined MU NOAA">Combined MU NOAA</option>
+                  <option value="Combined MU NOAA" disabled>Combined MU NOAA</option>
                 </select>
               </div>
             </div>
@@ -255,6 +250,29 @@ const GraphComponent = React.memo(function GraphComponent({ title, data }) {
   }
 });
 
+function useProcessedGeoJSON(data, type) {
+  return useMemo(() => {
+    if (!data) {
+      return null;
+    }
+    const simplified = turf.simplify(data, {
+      tolerance: 0.0001,
+      highQuality: true
+    });
+    const processed = {
+      ...simplified,
+      features: simplified.features.map(f => ({
+        ...f,
+        properties: {
+          ...f.properties,
+          type: type
+        }
+      }))
+    };
+    return processed;
+  }, [data, type]);
+}
+
 function Forecast() {
   const [mapHeight, setMapHeight] = useState(window.innerHeight * 0.8);
   const [gaugesData, setGaugesData] = useState([]);
@@ -265,6 +283,10 @@ function Forecast() {
   const [combinedGraphData, setCombinedGraphData] = useState(null);
   const mapRef = useRef(null);
   const graphRef = useRef(null);
+  const [boundary, setBoundary] = useState(null);
+  const [streamnetwork, setStreamnetwork] = useState(null);
+  const [renderErrorMessage, setRenderErrorMessage] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState('');
 
   const handleGraphChange = (data) => setGraphData(data);
   const handleNoaaGraphChange = (data) => setNoaaGraphData(data);
@@ -308,6 +330,43 @@ function Forecast() {
   }, [graphData, noaaGraphData, combinedGraphData]); // Corrected dependencies
 
   useEffect(() => {
+    const baseUrl = import.meta.env.VITE_APP_GCS_BASE_URL;
+    console.log("baseUrl", baseUrl);
+    
+    const fetchData = async () => {
+      try {
+        // Fetch boundary data
+        const boundaryResponse = await fetch(`${baseUrl}/Mo_Hydrology/Missouri_water_model_boundary.json`);
+        if (!boundaryResponse.ok) {
+          throw new Error(`Failed to fetch boundary data: ${boundaryResponse.status}`);
+        }
+        const boundaryData = await boundaryResponse.json();
+        console.log("Boundary data loaded:", boundaryData);
+        setBoundary(boundaryData);
+
+        // Fetch stream network data
+        const streamnetworkResponse = await fetch(`${baseUrl}/Mo_Hydrology/stream_network_4086.json`);
+        if (!streamnetworkResponse.ok) {
+          throw new Error(`Failed to fetch stream network data: ${streamnetworkResponse.status}`);
+        }
+        const streamnetworkData = await streamnetworkResponse.json();
+        console.log("Stream network data loaded:", streamnetworkData);
+        setStreamnetwork(streamnetworkData);
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setRenderErrorMessage(true);
+        setShowErrorMessage(`Failed to load map data: ${error.message}`);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const processedBoundary = useProcessedGeoJSON(boundary, 'boundary');
+  const processedStreams = useProcessedGeoJSON(streamnetwork, 'stream');
+
+  useEffect(() => {
     const fetchGaugeData = async () => {
       try {
         const response = await fetch('http://127.0.0.1:5000/api/check', {
@@ -345,22 +404,63 @@ function Forecast() {
     setSelectedPosition([gauge.latitude, gauge.longitude]);
   };
 
+  useEffect(() => {
+    // Ensure custom marker icons are correctly loaded
+    delete L.Icon.Default.prototype._getIconUrl;
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+      iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+    });
+  }, []);
+
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-gray-50 to-white flex flex-col justify-start py-4 sm:py-6">
       <div className="w-full max-w-[1400px] border border-gray-200 rounded-xl sm:rounded-2xl shadow-md overflow-hidden bg-white flex flex-col mx-auto px-2 sm:px-4">
         <div className="bg-white shadow-sm border-b border-gray-200/80 backdrop-blur-sm">
           <div className="w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 flex items-center gap-2 sm:gap-3">
-              <span className="text-blue-500">Water</span> Forecast
+              <span className="text-blue-500">National</span> Water Model Forecasts​
             </h1>
           </div>
         </div>
+         
+        <div className="px-6 py-6 bg-gray-50 rounded-xl shadow-sm max-w-7xl mx-auto">
+  <p className="text-base text-gray-700 leading-relaxed">
+    The <span className="font-semibold">National Water Model (NWM)</span> (
+    <a
+      href="https://water.noaa.gov/about/nwm"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-600 underline hover:text-blue-800 font-medium"
+    >
+      read about the model here
+    </a>
+    ), developed collaboratively and implemented by the NOAA Office of Water Prediction (
+    <a
+      href="https://water.noaa.gov"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-600 underline hover:text-blue-800 font-medium"
+    >
+      water.noaa.gov
+    </a>
+    ), provides simulations of observed and forecast streamflow. The NWM offers hydrologic guidance at a fine spatial and temporal scale across the United States. It complements official NWS river forecasts at approximately 4,000 locations.
+    <br /><br />
+    Users can view NWM simulations and forecasts for locations in Missouri. Streamflow simulations are available at all locations identified on the map, while river flow forecast locations are separately marked. For further details about the NWM, please visit&nbsp;
+    <a
+      href="https://water.noaa.gov/about/nwm"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-600 underline hover:text-blue-800 font-medium"
+    >
+      this page
+    </a>
+    .
+  </p>
+</div>
 
-        <div className="px-3 sm:px-4 py-3 sm:py-4 bg-gray-50 w-full">
-          <p className="text-sm sm:text-base text-gray-700 mb-2">
-          The Missouri River Basin Model provides historical and projected streamflow forecasts from 2000 to 2019 (note: this will include forecasts in the future with an updated date range). The hydrological model was developed using the Soil and Water Assessment Toolkit (SWAT). This product is updated daily. <a href="link_to_publication">Read here for more information on our model development</a>. Select a location and a date range to view the interactive hydrograph information.
-          </p>
-        </div>
+
 
         <div className="flex-1 flex flex-col lg:flex-row min-h-[500px] sm:min-h-[600px]">
           <div className="relative lg:w-2/3" style={{ height: mapHeight }}>
@@ -373,9 +473,10 @@ function Forecast() {
             >
               <MapContent />
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              <GeoJSON data={boundaryData} style={boundaryStyle} />
-              <GeoJSON data={streamData} style={streamStyle} />
-              
+            
+              {processedBoundary && <GeoJSON data={processedBoundary} style={boundaryStyle} />}
+              {processedStreams && <GeoJSON data={processedStreams} style={streamStyle} />}
+
               {gaugesData.map((gauge, index) => (
                 gauge.latitude && gauge.longitude && (
                   gauge.forecast_floodCategory === 'fcst_not_current' ? (
@@ -430,33 +531,6 @@ function Forecast() {
           </div>
         </div>
       </div>
-      {/* Graph Display Section - Moved outside the max-w-[1400px] container */}
-      {/* <div ref={graphRef} className="w-full py-4">
-        <div className="px-2 sm:px-4">
-          {(graphData || noaaGraphData || combinedGraphData) && (
-            <div className="grid grid-cols-1 gap-4 min-h-[400px]">
-              {graphData && graphData.primary_image && (
-                <GraphComponent title="Predicted Mu - Primary" data={graphData.primary_image} />
-              )}
-              {graphData && graphData.secondary_image && (
-                <GraphComponent title="Predicted Mu - Secondary" data={graphData.secondary_image} />
-              )}
-              {noaaGraphData && noaaGraphData.primary_image && (
-                <GraphComponent title="Predicted NOAA - Primary" data={noaaGraphData.primary_image} />
-              )}
-              {noaaGraphData && noaaGraphData.secondary_image && (
-                <GraphComponent title="Predicted NOAA - Secondary" data={noaaGraphData.secondary_image} />
-              )}
-              {combinedGraphData && combinedGraphData.primary_image && (
-                <GraphComponent title="Combined MU NOAA - Primary" data={combinedGraphData.primary_image} />
-              )}
-              {combinedGraphData && combinedGraphData.secondary_image && (
-                <GraphComponent title="Combined MU NOAA - Secondary" data={combinedGraphData.secondary_image} />
-              )}
-            </div>
-          )}
-        </div>
-      </div> */}
 
 <div ref={graphRef} className="w-full py-4 bg-white">
   <div className="px-2 sm:px-8 max-w-screen-xl mx-auto">

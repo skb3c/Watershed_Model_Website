@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import xarray as xr
 import numpy as np
@@ -15,11 +16,13 @@ class precipitation:
     def plot(self):
         # Define a list of file paths
         # Prod URL
-        file_paths = ["./data/NLDAS_precipitation/prcp.daily.2017.nc",
-                    "./data/NLDAS_precipitation/prcp.daily.2018.nc",
-                    "./data/NLDAS_precipitation/prcp.daily.2019.nc",
-                    "./data/NLDAS_precipitation/prcp.daily.2020.nc",
-                    "./data/NLDAS_precipitation/prcp.daily.2021.nc"]
+        base_url = os.environ.get('GCS_BASE_URL') 
+
+        file_paths = [f"{base_url}/NLDAS_precipitation/prcp.daily.2017.nc",
+                      f"{base_url}/NLDAS_precipitation/prcp.daily.2018.nc",
+                      f"{base_url}/NLDAS_precipitation/prcp.daily.2019.nc",
+                      f"{base_url}/NLDAS_precipitation/prcp.daily.2020.nc",
+                      f"{base_url}/NLDAS_precipitation/prcp.daily.2021.nc"]
         
         # file_paths = ["/Users/yuvateja/Downloads/Missouri_WaterShed/backend/data/prcp.daily.2017.nc",
         #             "/Users/yuvateja/Downloads/Missouri_WaterShed/backend/data/prcp.daily.2018.nc",

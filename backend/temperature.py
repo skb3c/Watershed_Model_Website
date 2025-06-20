@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import xarray as xr
 import numpy as np
@@ -19,18 +20,14 @@ class temperature():
     def plot(self):
         # Define a list of file paths
         # Prod URL
-        file_paths = ["./data/NLDAS_temperature/avg.temperature.daily.2010.nc",
-                    "./data/NLDAS_temperature/avg.temperature.daily.2011.nc",
-                    "./data/NLDAS_temperature/avg.temperature.daily.2012.nc",
-                    "./data/NLDAS_temperature/avg.temperature.daily.2013.nc",
-                    "./data/NLDAS_temperature/avg.temperature.daily.2014.nc",
-                    "./data/NLDAS_temperature/avg.temperature.daily.2015.nc",
-                    "./data/NLDAS_temperature/avg.temperature.daily.2016.nc",
-                    "./data/NLDAS_temperature/avg.temperature.daily.2017.nc",
-                    "./data/NLDAS_temperature/avg.temperature.daily.2018.nc",
-                    "./data/NLDAS_temperature/avg.temperature.daily.2019.nc",
-                    "./data/NLDAS_temperature/avg.temperature.daily.2020.nc",
-                    "./data/NLDAS_temperature/avg.temperature.daily.2021.nc"]
+        # Prod URL
+        base_url = os.environ.get('GCS_BASE_URL') 
+
+        file_paths = [f"{base_url}/NLDAS_temperature/avg.temperature.daily.2017.nc",
+                      f"{base_url}/NLDAS_temperature/avg.temperature.daily.2018.nc",
+                      f"{base_url}/NLDAS_temperature/avg.temperature.daily.2019.nc",
+                      f"{base_url}/NLDAS_temperature/avg.temperature.daily.2020.nc",
+                      f"{base_url}/NLDAS_temperature/avg.temperature.daily.2021.nc"]
 
         # Open each file and store them in a list of xarray datasets
         datasets = [xr.open_dataset(file_path) for file_path in file_paths]

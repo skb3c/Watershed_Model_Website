@@ -1,7 +1,7 @@
 import xarray as xr
 import numpy as np
 import plotly.graph_objects as go
-
+import os
 class climateIndices:
 
     def __init__(self, latitude, longitude, SDII, RX5, RR1, RX1, R10, R20, PRCPTOT, CDD, CWD):
@@ -76,7 +76,7 @@ class climateIndices:
     def plot(self):
 
         response = {}
-        file_path = "./data/NLDAS_Climate_Indices/NLDAS" #Prod URL
+        file_path =  os.environ.get('GCS_BASE_URL') + "/NLDAS_Climate_Indices/NLDAS" #Prod URL
         if(self.SDII):
             file_name = "/USA_SDII_yearly_NLDAS_1980_2021.nc"
             index_name = "SDII"

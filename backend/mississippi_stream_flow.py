@@ -1,6 +1,9 @@
+import os
 import pandas as pd
 import plotly.graph_objects as go
 from datetime import datetime
+
+
 
 class Mississippi_visualization:
 
@@ -27,23 +30,23 @@ class Mississippi_visualization:
         startIndex = (x.year - startDate.year) * 12 + (x.month - startDate.month)
         endIndex = (y.year - startDate.year) * 12 + (y.month - startDate.month)
 
-
+        base_url = os.environ.get('GCS_BASE_URL')
         # Load dataset
         file_path = ''
         if(self.subBasinName == 'arkansas'):
-            file_path = './data/mississippi_flows_monthly_2010_2019/flow_arkansas_sub5285_monthly_2010_to_2019.csv'  # Prod URL
+            file_path = f'{base_url}/mississippi_flows_monthly_2010_2019/flow_arkansas_sub5285_monthly_2010_to_2019.csv'  # Prod URL
         elif(self.subBasinName == 'lower_mississippi'):
-            file_path = './data/mississippi_flows_monthly_2010_2019/flow_lower_mississippi_sub2675_monthly_2010_to_2019.csv' # Prod URL
+            file_path = f'{base_url}/mississippi_flows_monthly_2010_2019/flow_lower_mississippi_sub2675_monthly_2010_to_2019.csv' # Prod URL
         elif(self.subBasinName == 'lower_missouri'):
-            file_path = './data/mississippi_flows_monthly_2010_2019/flow_lower_missouri_sub5835_monthly_2010_to_2019.csv' # Prod URL
+            file_path = f'{base_url}/mississippi_flows_monthly_2010_2019/flow_lower_missouri_sub5835_monthly_2010_to_2019.csv' # Prod URL
         elif(self.subBasinName == 'ohio'):
-            file_path = './data/mississippi_flows_monthly_2010_2019/flow_ohio_sub3139_monthly_2010_to_2019.csv' # Prod URL
+            file_path =  f'{base_url}/mississippi_flows_monthly_2010_2019/flow_ohio_sub3139_monthly_2010_to_2019.csv' # Prod URL
         elif(self.subBasinName == 'tennessee'):
-            file_path = './data/mississippi_flows_monthly_2010_2019/flow_tennessee_sub904_monthly_2010_to_2019.csv' # Prod URL
+            file_path = f'{base_url}/mississippi_flows_monthly_2010_2019/flow_tennessee_sub904_monthly_2010_to_2019.csv' # Prod URL
         elif(self.subBasinName == 'upper_mississippi'):
-            file_path = './data/mississippi_flows_monthly_2010_2019/flow_upper_mississippi_sub2675_monthly_2010_to_2019.csv' # Prod URL
+            file_path = f'{base_url}/mississippi_flows_monthly_2010_2019/flow_upper_mississippi_sub2675_monthly_2010_to_2019.csv' # Prod URL
         elif(self.subBasinName == 'upper_missouri'):
-            file_path = './data/mississippi_flows_monthly_2010_2019/flow_upper_missouri_sub6977_monthly_2010_to_2019.csv' # Prod URL
+            file_path = f'{base_url}/mississippi_flows_monthly_2010_2019/flow_upper_missouri_sub6977_monthly_2010_to_2019.csv' # Prod URL
             
         try:
             df = pd.read_csv(file_path)
