@@ -420,16 +420,47 @@ function Forecast() {
         <div className="bg-white shadow-sm border-b border-gray-200/80 backdrop-blur-sm">
           <div className="w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 flex items-center gap-2 sm:gap-3">
-              <span className="text-blue-500">Water</span> Forecast
+              <span className="text-blue-500">National</span> Water Model Forecasts​
             </h1>
           </div>
         </div>
+         
+        <div className="px-6 py-6 bg-gray-50 rounded-xl shadow-sm max-w-7xl mx-auto">
+  <p className="text-base text-gray-700 leading-relaxed">
+    The <span className="font-semibold">National Water Model (NWM)</span> (
+    <a
+      href="https://water.noaa.gov/about/nwm"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-600 underline hover:text-blue-800 font-medium"
+    >
+      read about the model here
+    </a>
+    ), developed collaboratively and implemented by the NOAA Office of Water Prediction (
+    <a
+      href="https://water.noaa.gov"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-600 underline hover:text-blue-800 font-medium"
+    >
+      water.noaa.gov
+    </a>
+    ), provides simulations of observed and forecast streamflow. The NWM offers hydrologic guidance at a fine spatial and temporal scale across the United States. It complements official NWS river forecasts at approximately 4,000 locations.
+    <br /><br />
+    Users can view NWM simulations and forecasts for locations in Missouri. Streamflow simulations are available at all locations identified on the map, while river flow forecast locations are separately marked. For further details about the NWM, please visit&nbsp;
+    <a
+      href="https://water.noaa.gov/about/nwm"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-600 underline hover:text-blue-800 font-medium"
+    >
+      this page
+    </a>
+    .
+  </p>
+</div>
 
-        <div className="px-3 sm:px-4 py-3 sm:py-4 bg-gray-50 w-full">
-          <p className="text-sm sm:text-base text-gray-700 mb-2">
-          The Missouri River Basin Model provides historical and projected streamflow forecasts from 2000 to 2019 (note: this will include forecasts in the future with an updated date range). The hydrological model was developed using the Soil and Water Assessment Toolkit (SWAT). This product is updated daily. <a href="link_to_publication">Read here for more information on our model development</a>. Select a location and a date range to view the interactive hydrograph information.
-          </p>
-        </div>
+
 
         <div className="flex-1 flex flex-col lg:flex-row min-h-[500px] sm:min-h-[600px]">
           <div className="relative lg:w-2/3" style={{ height: mapHeight }}>

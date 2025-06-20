@@ -345,17 +345,20 @@ function WaterDemand() {
         <div className="bg-white shadow-sm border-b border-gray-200/80 backdrop-blur-sm">
           <div className="w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 flex items-center gap-2 sm:gap-3">
-              <span className="text-blue-500">Water</span> Demand
+              <span className="text-blue-500">Agricultural </span> Water Management​
               <sup className="text-sm text-gray-700 font-medium align-super">(under development)</sup>
             </h1>
           </div>
         </div>
 
-        <div className="px-3 sm:px-4 py-3 sm:py-4 bg-gray-50 w-full">
-          <p className="text-sm sm:text-base text-gray-700 mb-2">
-          Temperature, vapor pressure, and precipitation are interconnected factors that determine the water needs of agricultural systems. Understanding and managing these factors are crucial for optimizing water use in agriculture, enhancing crop yields, and ensuring water sustainability. Select a land area of interest, and a date range, to see trends in precipitation, vapor pressure, and/or temperature in our interactive graphs. <span className="font-medium text-gray-800">More Information Coming Soon.</span>
-          </p>
-        </div>
+        <div className="px-6 py-6 bg-gray-50 rounded-xl shadow-sm max-w-7xl mx-auto space-y-6">
+  <p className="text-base text-gray-700 leading-relaxed">
+    Weather plays a key role that determine the water demand and use agricultural systems. Understanding and managing these factors are crucial for optimizing water use in agriculture, enhancing crop yields, and ensuring access to water. ​
+    Here, we provide various weather-related variables and indices related to agriculture and agricultural water management. We use daily weather data to generate these outputs.​
+    Select a land area of interest, and a date range, to see trends in precipitation, vapor pressure, and/or temperature in our interactive graphs.<b> More Information Coming Soon.</b>
+  </p>
+</div>
+
 
         <div className="flex-1 flex flex-col lg:flex-row min-h-[500px] sm:min-h-[600px] pb-4 sm:pb-8">
           <div className="relative flex-1 min-h-[300px] sm:min-h-[400px] lg:min-h-0">

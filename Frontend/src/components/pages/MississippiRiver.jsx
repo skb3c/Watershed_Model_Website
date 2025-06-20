@@ -334,18 +334,29 @@ function MississippiRiver() {
         <div className="bg-white shadow-sm border-b border-gray-200/80 backdrop-blur-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <h1 className="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-              <span className="text-blue-500">Mississippi</span> Basin
+              <span className="text-blue-500">Mississippi</span> River Basin
               <sup className="text-sm text-gray-700 font-medium align-super">(under development)</sup>
 
             </h1>
           </div>
         </div>
+        <div className="px-6 py-6 bg-gray-50 rounded-xl shadow-sm max-w-7xl mx-auto">
+  <p className="text-base text-gray-700 leading-relaxed">
+    <span className="font-semibold">The Mississippi River Basin (MRB)</span> watershed simulation model provides historical streamflow hydrographs from 1980 to the present at nearly 30,000 stream segments.
+    The model simulates the water cycle using mathematical representations of key processes. MRB model simulations include physical processes such as infiltration, evapotranspiration, runoff, and the movement of water through subsurface flow pathways, which vary significantly with topography, soil types, vegetation, and land management. It also incorporates important management decisions related to agriculture, point and non-point source pollution, and reservoir operations.
+    <a
+      href="https://your-publication-link.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-block text-blue-600 underline hover:text-blue-800 font-medium"
+    >
+      Read more about our model development
+    </a>
+    .
+    Select a location and a date range to view the interactive hydrograph information.
+  </p>
+</div>
 
-        <div className="px-4 py-4 bg-gray-50 max-w-7xl mx-auto w-full">
-          <p className="text-gray-700 mb-2">
-          The Mississippi River Basin Model provides historical Streamflow hydrographs from 2000 to 2019. Read here for more information on our model development (link to publication). Select a location and a date range to view the interactive hydrograph information.
-          </p>
-        </div>
 
         <div className="flex-1 flex lg:flex-row flex-col min-h-[600px] pb-8">
           <div className="relative flex-1 min-h-[400px] lg:min-h-0">

@@ -21,7 +21,7 @@ function Navbar() {
   <h1 className="heading-title">
     {/* Desktop (≥768px) */}
     <span className="heading-desktop">
-      Hydrology Lab at University of Missouri
+      Hydrology Lab at the University of Missouri
     </span>
 
     {/* Mobile (<768px) */}

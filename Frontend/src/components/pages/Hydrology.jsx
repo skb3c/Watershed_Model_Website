@@ -54,7 +54,7 @@ function ToggleButton({ activeLayer, onChange }) {
     }`}
     onClick={() => onChange('stream')}
   >
-    Streamflow
+    Streams
   </button>
 </div>
   );
@@ -358,14 +358,24 @@ function Hydrology() {
   </div>
 </div>
 
-        <div className="px-4 py-4 bg-gray-50">
-      <p className="text-gray-700 mb-2">
-  The Missouri River Basin Model provides historical and projected streamflow forecasts from 2000 to 2019 (note: this will include forecasts in the future with an updated date range). The hydrological model was developed using the Soil and Water Assessment Toolkit (SWAT). This product is updated daily. 
-  <a href="link_to_publication" className="text-blue-500 underline"> Read here for more information on our model development</a>. 
-  Select a location and a date range to view the interactive hydrograph information. <span className="font-medium text-gray-800">We are currently awaiting official publication.</span>
-</p>
+<div className="px-6 py-6 bg-gray-50 rounded-xl shadow-sm max-w-7xl mx-auto space-y-6">
+  <p className="text-base text-gray-700 leading-relaxed">
+    The watershed model provides streamflow simulations at daily time steps since 2000. The model is also being set up to provide ensemble flow forecasts for up to 30 days. The study region is divided into 4,000+ watersheds and stream segments, with outputs updated daily.
+    
+    <a
+      href="https://link_to_publication.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-600 underline hover:text-blue-800 font-medium"
+    >
+      Read here for more information on our model development
+    </a>
+    .
+    Select a location and a date range to view the interactive outputs.
+  </p>
+</div>
 
-      </div>
+
 
         <div className="flex-1 flex flex-col relative">
           <div className="flex-1 flex lg:flex-row flex-col min-h-[600px] pb-20">
